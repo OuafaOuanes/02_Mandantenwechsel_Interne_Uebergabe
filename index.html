@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mandantenwechsel & Interne Übergabe – Kanzlei</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f5f5f2;color:#1a1a1a;font-size:15px}
+:root{
+  --teal:#1D9E75;--teal-d:#0F6E56;--teal-dd:#085041;
+  --teal-l:#E1F5EE;--teal-m:#9FE1CB;
+  --blue-l:#E6F1FB;--blue-b:#85B7EB;--blue-d:#0C447C;
+  --amber-l:#FAEEDA;--amber-b:#FAC775;--amber-d:#633806;
+  --red-l:#FCEBEB;--red-b:#F09595;--red-d:#A32D2D;
+  --green-l:#EAF3DE;--green-d:#27500A;
+  --gray:#888;--border:#ddd;--bg:#f5f5f2;--white:#fff;
+  --radius:8px;--radius-lg:12px
+}
+.page{max-width:780px;margin:0 auto;padding:24px 16px 60px}
+.kanzlei-header{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:20px 24px;margin-bottom:20px;display:flex;align-items:center;gap:16px}
+.kanzlei-logo{width:48px;height:48px;background:var(--teal);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.kanzlei-header h1{font-size:18px;font-weight:600;color:#1a1a1a}
+.kanzlei-header p{font-size:13px;color:var(--gray);margin-top:2px}
+.tabs{display:flex;gap:0;margin-bottom:20px;background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden}
+.tab{flex:1;padding:13px 10px;font-size:13px;cursor:pointer;border:none;background:none;color:var(--gray);border-bottom:3px solid transparent;font-family:inherit;font-weight:500;text-align:center;transition:all .15s}
+.tab.active{color:var(--teal-d);border-bottom-color:var(--teal);background:var(--teal-l);font-weight:600}
+.tab:hover:not(.active){color:#333}
+.prog-wrap{margin-bottom:16px}
+.prog-top{display:flex;justify-content:space-between;font-size:12px;color:var(--gray);margin-bottom:5px}
+.prog-track{height:6px;background:#e8e8e5;border-radius:3px}
+.prog-fill{height:6px;background:var(--teal);border-radius:3px;transition:width .3s}
+.mandant-box{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:16px 20px;margin-bottom:16px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.mandant-box .field{display:flex;flex-direction:column;gap:4px}
+.mandant-box .field label{font-size:12px;color:#555;font-weight:600}
+.mandant-box .field input{border:1px solid var(--border);border-radius:var(--radius);padding:7px 10px;font-size:14px;background:var(--white);color:#1a1a1a;font-family:inherit}
+.mandant-box .field input:focus{outline:none;border-color:var(--teal)}
+.grp{margin-bottom:20px}
+.grp-title{font-size:12px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--white);border-radius:var(--radius);border:1px solid var(--border)}
+.grp-title .cnt{margin-left:auto;font-size:11px;background:var(--teal-l);color:var(--teal-dd);padding:2px 8px;border-radius:20px}
+.cl{display:flex;flex-direction:column;gap:6px}
+.ci{display:flex;align-items:flex-start;gap:12px;padding:11px 14px;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;background:var(--white);transition:all .15s;user-select:none}
+.ci:hover{border-color:var(--teal-m);background:#fafaf8}
+.ci.done{background:var(--teal-l);border-color:var(--teal-m)}
+.ci.na{background:#f8f8f5;opacity:.6}
+.ck{width:20px;height:20px;border:1.5px solid var(--border);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;transition:all .15s;font-size:12px}
+.ci.done .ck{background:var(--teal);border-color:var(--teal-d);color:#fff}
+.ci-body{flex:1}
+.ci-label{font-size:13px;font-weight:600;color:#1a1a1a;display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.ci-sub{font-size:12px;color:var(--gray);margin-top:3px;line-height:1.5}
+.ci-note{margin-top:6px}
+.ci-note input{border:1px solid var(--border);border-radius:var(--radius);padding:5px 9px;font-size:12px;background:var(--white);color:#1a1a1a;font-family:inherit;width:100%}
+.badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:20px;font-weight:700}
+.b-red{background:var(--red-l);color:var(--red-d)}
+.b-amber{background:var(--amber-l);color:var(--amber-d)}
+.b-blue{background:var(--blue-l);color:var(--blue-d)}
+.b-teal{background:var(--teal-l);color:var(--teal-dd)}
+.b-green{background:var(--green-l);color:var(--green-d)}
+.infobox{background:var(--blue-l);border:1px solid var(--blue-b);border-radius:var(--radius);padding:11px 14px;font-size:12px;color:var(--blue-d);display:flex;gap:8px;align-items:flex-start;margin-bottom:16px}
+.warnbox{background:var(--red-l);border:1px solid var(--red-b);border-radius:var(--radius);padding:11px 14px;font-size:12px;color:var(--red-d);display:flex;gap:8px;align-items:flex-start;margin-bottom:16px}
+.ambbox{background:var(--amber-l);border:1px solid var(--amber-b);border-radius:var(--radius);padding:11px 14px;font-size:12px;color:var(--amber-d);display:flex;gap:8px;align-items:flex-start;margin-bottom:16px}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.stat{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px;text-align:center}
+.stat-num{font-size:24px;font-weight:700;color:var(--teal)}
+.stat-lbl{font-size:11px;color:var(--gray);margin-top:3px}
+.btn-print{border:1px solid var(--teal);border-radius:var(--radius);padding:9px 16px;font-size:13px;cursor:pointer;background:var(--teal-l);color:var(--teal-d);font-family:inherit;font-weight:600}
+.btn-reset{border:1px solid var(--border);border-radius:var(--radius);padding:9px 16px;font-size:13px;cursor:pointer;background:var(--white);color:var(--gray);font-family:inherit}
+.actions{display:flex;gap:10px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+@media print{
+  .tabs,.actions,.btn-print,.btn-reset{display:none!important}
+  .tab-content{display:block!important}
+  body{background:#fff}
+  .ci{break-inside:avoid}
+}
+@media(max-width:580px){
+  .stat-grid{grid-template-columns:1fr 1fr}
+  .mandant-box{grid-template-columns:1fr}
+  .tabs{flex-direction:column}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="kanzlei-header">
+  <div class="kanzlei-logo">🔄</div>
+  <div>
+    <h1>Mandantenwechsel &amp; Interne Übergabe</h1>
+    <p>Vollständige Checkliste für Übertrag und Kanzleianlage</p>
+  </div>
+  <button class="btn-print" onclick="window.print()" style="margin-left:auto">🖨 Drucken</button>
+</div>
+
+<div class="mandant-box">
+  <div class="field"><label>Mandantenname</label><input id="m_name" placeholder="Name / Firma" oninput="updateMandant()"></div>
+  <div class="field"><label>DATEV-Nr.</label><input id="m_nr" placeholder="z.B. 10042" oninput="updateMandant()"></div>
+  <div class="field"><label>Zuständig</label><input id="m_zust" placeholder="Sachbearbeiter" oninput="updateMandant()"></div>
+  <div class="field"><label>Datum Mandatsannahme</label><input id="m_datum" type="date" oninput="updateMandant()"></div>
+  <div class="field"><label>Vorberater / Vorkanzlei</label><input id="m_vorber" placeholder="Name der Vorkanzlei" oninput="updateMandant()"></div>
+  <div class="field"><label>Wechsel-Grund</label><input id="m_grund" placeholder="z.B. Empfehlung, Unzufriedenheit" oninput="updateMandant()"></div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('wechsel',this)">📦 Mandantenwechsel</button>
+  <button class="tab" onclick="switchTab('intern',this)">🏢 Interne Kanzleianlage</button>
+</div>
+
+<div id="tab-wechsel" class="tab-content active"></div>
+<div id="tab-intern" class="tab-content"></div>
+
+</div>
+
+<script>
+const W = {}, I = {};
+
+const WECHSEL = [
+  {grp:'📬 Kündigung & Vollmachten', items:[
+    {id:'w1',label:'Vollmacht: Kündigung beim Vorberater',sub:'Schriftliche Kündigung im Namen des Mandanten verfassen und versenden — Kündigungsfrist prüfen (meist 3 Monate zum Jahresende oder zum Quartalsende)',tag:'red',tagTxt:'Fristpflicht',note:true,notePlh:'Kündigungsdatum:'},
+    {id:'w2',label:'ELSTER-Vollmacht neu erteilen lassen',sub:'Steuerberatervollmacht für alle relevanten Steuerarten in ELSTER registrieren — alte Vollmacht des Vorberaters wird damit überschrieben',note:true,notePlh:'Datum Vollmacht erteilt:'},
+    {id:'w3',label:'SEPA-Mandat / Bankeinzug neu einrichten',sub:'Falls Finanzkasse per Lastschrift abbuchte — Einzugsermächtigung prüfen und ggf. neu erteilen'},
+    {id:'w4',label:'Vollmacht Finanzamt (alle Steuerarten)',sub:'Schriftliche Vollmacht für alle zu bearbeitenden Steuerarten beim zuständigen Finanzamt hinterlegen'},
+  ]},
+  {grp:'📂 Unterlagen vom Vorberater anfordern', items:[
+    {id:'w5',label:'DATEV-Datenübernahme / Exportdatei anfordern',sub:'DATEV-Datenträger (Buchungen, OPOS, Anlagevermögen) oder strukturierte Übergabeunterlagen — Vorberater ist zur Herausgabe verpflichtet',tag:'red',tagTxt:'Pflicht'},
+    {id:'w6',label:'Jahresabschlüsse der letzten 3 Jahre',sub:'Bilanz / EÜR, G+V, Anhang, Lagebericht (falls vorhanden), unterschriebene Versionen mit Steuerbescheiden'},
+    {id:'w7',label:'Steuerbescheide aller Steuerarten (letzte 3 Jahre)',sub:'ESt/KSt, GewSt, USt-Jahresbescheid, Lohnsteuer-Anmeldungen, Grundsteuerbescheide'},
+    {id:'w8',label:'Offene / nicht abgegebene Steuererklärungen',sub:'Welche Erklärungen sind beim Vorberater noch in Bearbeitung oder nicht abgegeben? Übernahme des Bearbeitungsstands',tag:'amber',tagTxt:'Wichtig',note:true,notePlh:'Offene Erklärungen:'},
+    {id:'w9',label:'Aktuelles Anlagevermögensverzeichnis / Anlagenspiegel',sub:'AfA-Verläufe, Zugänge, Abgänge — für Fortführung der Abschreibungen zwingend notwendig'},
+    {id:'w10',label:'Lohnkonten und Lohnjournale (laufendes Jahr)',sub:'Alle bereits abgerechneten Monate des laufenden Jahres — SV-Meldungen, Lohnsteueranmeldungen'},
+    {id:'w11',label:'Kontenblätter / Saldenlisten laufendes Jahr',sub:'Buchhalterische Auswertungen des laufenden Jahres für Übergangsabgrenzung'},
+    {id:'w12',label:'Offene-Posten-Liste Debitoren & Kreditoren',sub:'Aktuelle OPOS zum Übergabestichtag — für Übernahme in DATEV'},
+  ]},
+  {grp:'⚠️ Fristen & laufende Verfahren', items:[
+    {id:'w13',label:'Laufende Einsprüche / Klageverfahren übernehmen',sub:'Einsprüche beim Finanzamt, Klagen beim Finanzgericht — Fristen sofort prüfen! Einspruchsfrist läuft auch nach Kanzleiwechsel weiter',tag:'red',tagTxt:'Fristpflicht',note:true,notePlh:'Einspruch gegen Bescheid vom:'},
+    {id:'w14',label:'Offene Betriebsprüfungen dokumentieren',sub:'Zeitraum der BP, aktueller Stand, Prüfer, Schlussbesprechung ausstehend? Fristen für BP-Berichte beachten',tag:'amber',tagTxt:'Wichtig',note:true,notePlh:'BP-Zeitraum / Status:'},
+    {id:'w15',label:'Steuervorauszahlungen prüfen und übernehmen',sub:'Aktuelle Vorauszahlungsbeträge (ESt/KSt/GewSt) und Fälligkeiten (10.03 / 10.06 / 10.09 / 10.12) in Fristenkalender aufnehmen'},
+    {id:'w16',label:'USt-Voranmeldungen laufendes Jahr abgleichen',sub:'Bereits eingereichte VA des laufenden Jahres mit Buchungen abgleichen — Differenzen dokumentieren',note:true,notePlh:'Letzter VA-Zeitraum:'},
+    {id:'w17',label:'Dauerfristverlängerungen (USt / Lohn) prüfen',sub:'Bestehen Dauerfristverlängerungen beim Vorberater? Müssen diese neu beantragt werden?'},
+    {id:'w18',label:'Lohnsteueranmeldungen laufendes Jahr',sub:'Bereits abgegebene Lohnsteuer-Anmeldungen dokumentieren — Vergleich mit Lohnkonten'},
+    {id:'w19',label:'SV-Beitragsnachweise laufendes Jahr',sub:'Beitragsnachweise der Sozialversicherungsträger — Übergabe und Fortführung sicherstellen'},
+  ]},
+  {grp:'🔍 Steuerliche Analyse', items:[
+    {id:'w20',label:'Verlustvorträge und steuerliche Sondertatbestände',sub:'Festgestellte Verlustvorträge (ESt/KSt/GewSt), stille Reserven, Entnahmen, verdeckte Gewinnausschüttungen aus Vorjahren'},
+    {id:'w21',label:'Investitionsabzugsbeträge (IAB) und Sonderabschreibungen',sub:'Noch nicht aufgelöste IAB nach §7g EStG — Frist zur Investition beachten (3 Jahre nach Abzug)'},
+    {id:'w22',label:'Steuerliche Sonderregelungen prüfen',sub:'Organschaft, Betriebsaufspaltung, verdeckte Einlagen, Umwandlungen, Restrukturierungen aus Vorjahren'},
+    {id:'w23',label:'Finanzamt: Kontoverbindung für Erstattungen',sub:'Bankverbindung für Steuererstattungen beim Finanzamt prüfen und ggf. aktualisieren'},
+  ]},
+  {grp:'✅ Abschluss Mandantenwechsel', items:[
+    {id:'w24',label:'Bestätigung Kündigung beim Vorberater eingegangen',sub:'Schriftliche Bestätigung des Vorberaters über den Eingang der Kündigung aufbewahren',note:true,notePlh:'Bestätigung erhalten am:'},
+    {id:'w25',label:'Alle Unterlagen vollständig erhalten',sub:'Checkliste der erhaltenen Dokumente abhaken — bei fehlenden Unterlagen schriftlich anmahnen'},
+    {id:'w26',label:'Begrüßungsschreiben an Mandanten versandt',sub:'Mit neuen Ansprechpartnern, Kanzleidaten, Portal-Zugangsdaten und nächsten Schritten'},
+    {id:'w27',label:'Mandant über offene Fristen und Verfahren informiert',sub:'Mandant schriftlich informieren welche Fristen und Verfahren übernommen wurden'},
+  ]},
+];
+
+const INTERN = [
+  {grp:'💻 DATEV & Kanzleisoftware', items:[
+    {id:'i1',label:'Mandant in DATEV Eigenorganisation anlegen',sub:'Mandantennummer, Zuständigkeiten (Steuern, Buch, Lohn), Korrespondenzweg, Sprache hinterlegen'},
+    {id:'i2',label:'DATEV Rechnungswesen: Mandant anlegen',sub:'SKR03 oder SKR04, Kontenplan, Wirtschaftsjahr, Umsatzsteuerschlüssel, Kostenstellenstruktur konfigurieren'},
+    {id:'i3',label:'DATEV Lohn & Gehalt: Mandant anlegen',sub:'Betriebsnummer, Abrechnungskreis, SV-Träger, Steuer-ID, Lohnarten anlegen — falls Lohnbuchhaltung beauftragt',note:true,notePlh:'Lohn-Sachbearbeiter:'},
+    {id:'i4',label:'DATEV Unternehmen Online (DUO) einrichten',sub:'Belegfreigabe, digitale Belegablage, Bankenschnittstelle (DATEV Zahlungsverkehr) aktivieren, Mandant einweisen'},
+    {id:'i5',label:'myDATEV / Mandantenportal-Zugang anlegen',sub:'Zugangsdaten erstellen, an Mandanten kommunizieren — Einweisung in Dokumentenübermittlung'},
+    {id:'i6',label:'Archiv / Dokumentenmanagementsystem anlegen',sub:'Ordnerstruktur digital und physisch anlegen — Ablageregeln, Zugriffsrechte, Aufbewahrungsfristen definieren'},
+  ]},
+  {grp:'📅 Fristen & Wiedervorlagen', items:[
+    {id:'i7',label:'Steuererklärungsfristen in Fristenkalender',sub:'ESt/KSt/GewSt/USt Jahreserklärung, ggf. verlängerte Frist (Steuerberater-Kontingent) — mit interner Bearbeitungsfrist',note:true,notePlh:'Abgabefrist:'},
+    {id:'i8',label:'USt-Voranmeldungsrhythmus eintragen',sub:'Monatlich (10. des Folgemonats) oder quartalsweise (10.04 / 10.07 / 10.10 / 10.01) — Dauerfristverlängerung berücksichtigen'},
+    {id:'i9',label:'Lohnsteueranmeldungsfristen (Lohnmandate)',sub:'10. des Folgemonats — oder mit Dauerfristverlängerung zum 10. des übernächsten Monats'},
+    {id:'i10',label:'Steuervorauszahlungen in Fristenkalender',sub:'ESt/KSt/GewSt: 10.03. / 10.06. / 10.09. / 10.12. — aktuelle Beträge eintragen, Anpassung prüfen'},
+    {id:'i11',label:'Jahresabschluss-Deadline intern planen',sub:'Unterlagen-Anforderungsschreiben, Besprechungstermin, interne Fertigstellungsfrist und Abgabedatum'},
+    {id:'i12',label:'Bilanzbesprechungstermin vormerken',sub:'Termin mit Mandant für Jahresabschluss-Besprechung — rechtzeitig im Kalender blockieren'},
+  ]},
+  {grp:'📋 Vollmachten & Rechtliche Grundlagen', items:[
+    {id:'i13',label:'Steuerberatervollmacht unterzeichnen lassen',sub:'Umfassende Vollmacht für alle Steuerarten im Original — in Mandantenakte ablegen',note:true,notePlh:'Datum Unterzeichnung:'},
+    {id:'i14',label:'Auftragsbestätigung / Mandatsvertrag unterzeichnet',sub:'Schriftlicher Auftrag mit Leistungsumfang, Vergütung, Haftungsbeschränkung nach §52 StBerG — vor Beginn der Arbeiten'},
+    {id:'i15',label:'Datenschutzerklärung (DSGVO Art. 13) unterzeichnet',sub:'Einwilligung zur Datenverarbeitung — AVV wenn Auftragsverarbeitung (z.B. Lohnabrechnung)'},
+    {id:'i16',label:'GwG-Identifizierungsprotokoll archiviert',sub:'Ausweiskopie, Identifizierungsprotokoll mit Datum und prüfender Person — 5 Jahre aufbewahren (§8 GwG)',tag:'red',tagTxt:'GwG-Pflicht'},
+    {id:'i17',label:'Transparenzregister / WiEReG abgefragt',sub:'Wirtschaftlich Berechtigte identifizieren und dokumentieren (ab 25% Beteiligung) — Pflicht bei GmbH, AG, KG, GbR',tag:'amber',tagTxt:'Bei Gesellschaften'},
+    {id:'i18',label:'Honorarvereinbarung unterzeichnet',sub:'Separate Vergütungsvereinbarung falls von StBVV abgewichen wird — Schriftform empfohlen',note:true,notePlh:'Honorar / Monat (€ netto):'},
+  ]},
+  {grp:'🤝 Kommunikation & Mandantenbegrüßung', items:[
+    {id:'i19',label:'Begrüßungsschreiben versandt',sub:'Anschreiben mit Ansprechpartnern, Kanzleidaten, Telefon / E-Mail, Portal-Zugangsdaten, nächsten Schritten',note:true,notePlh:'Versandt am:'},
+    {id:'i20',label:'Ersttreffen / Kick-off-Gespräch durchgeführt',sub:'Steuerliche Situation erläutern, Erwartungen abstimmen, Unterlagenübermittlung vereinbaren, Fragen klären',note:true,notePlh:'Datum Erstgespräch:'},
+    {id:'i21',label:'Unterlagenübermittlungsweg vereinbart',sub:'DATEV Unternehmen Online / E-Mail / Post — Belege, Kontoauszüge, Lohnunterlagen'},
+    {id:'i22',label:'Feste Ansprechpartner kommuniziert',sub:'Mandant weiß, wen er bei welchem Thema ansprechen soll (Steuern / Lohn / Buchhaltung / Allgemein)'},
+    {id:'i23',label:'Mandant in Kanzlei-Infoverteil aufgenommen',sub:'Steuerliche Infobriefe, Fristen-Reminder, Newsletter — mit Zustimmung des Mandanten'},
+  ]},
+  {grp:'🔍 Qualitätssicherung & Abschluss', items:[
+    {id:'i24',label:'Vier-Augen-Prüfung der Stammdaten',sub:'Zweiter Mitarbeiter prüft Vollständigkeit und Richtigkeit aller erfassten Daten in DATEV'},
+    {id:'i25',label:'Onboarding-Akte vollständig und unterschrieben',sub:'Alle Dokumente vorhanden, datiert, archiviert — diese Checkliste vollständig abgehakt',note:true,notePlh:'Geprüft von:'},
+    {id:'i26',label:'Erstbuchung / Testabrechnung durchgeführt',sub:'Erste Buchungen oder Lohnabrechnung testen — Kontenrahmen, Kostenstellenstruktur, Steuer-Ids prüfen'},
+    {id:'i27',label:'Mandatsspiegel intern aktualisiert',sub:'Gesamtübersicht aller Mandate intern (Partner-Meeting, Kapazitätsplanung) aktualisieren'},
+  ]},
+];
+
+let wData = {}, iData = {};
+
+function updateMandant(){}
+
+function stats(data, items){
+  const total = items.reduce((a,g)=>a+g.items.length,0);
+  const done = Object.values(data).filter(v=>v==='done').length;
+  return {total, done, pct: total>0?Math.round(done/total*100):0};
+}
+
+function renderTab(tabId, checks, data, storeKey){
+  const {total,done,pct} = stats(data, checks);
+
+  let html = `
+  <div class="stat-grid">
+    <div class="stat"><div class="stat-num">${total}</div><div class="stat-lbl">Gesamt</div></div>
+    <div class="stat"><div class="stat-num" style="color:var(--teal)">${done}</div><div class="stat-lbl">Erledigt</div></div>
+    <div class="stat"><div class="stat-num" style="color:var(--amber-d)">${total-done}</div><div class="stat-lbl">Offen</div></div>
+    <div class="stat"><div class="stat-num">${pct}%</div><div class="stat-lbl">Fortschritt</div></div>
+  </div>
+  <div class="prog-wrap">
+    <div class="prog-top"><span>Fortschritt</span><span>${done} / ${total}</span></div>
+    <div class="prog-track"><div class="prog-fill" style="width:${pct}%"></div></div>
+  </div>`;
+
+  if(tabId==='tab-wechsel'){
+    html += `<div class="warnbox">⚠️ <span>Alle Punkte mit <strong>Fristpflicht</strong> sofort bearbeiten — Einspruchsfristen laufen auch nach Kanzleiwechsel weiter!</span></div>`;
+  } else {
+    html += `<div class="infobox">ℹ️ <span>Interne Checkliste — wird vom zuständigen Mitarbeiter nach Mandatsannahme abgearbeitet. Fortschritt wird automatisch gespeichert.</span></div>`;
+  }
+
+  checks.forEach(grp => {
+    const grpDone = grp.items.filter(it=>data[it.id]==='done').length;
+    html += `<div class="grp">
+      <div class="grp-title">${grp.grp}<span class="cnt">${grpDone}/${grp.items.length}</span></div>
+      <div class="cl">`;
+    grp.items.forEach(item => {
+      const st = data[item.id]||'';
+      html += `<div class="ci ${st}" onclick="toggle('${storeKey}','${item.id}',event)">
+        <div class="ck">${st==='done'?'✓':''}</div>
+        <div class="ci-body">
+          <div class="ci-label">${item.label}
+            ${item.tag ? `<span class="badge b-${item.tag}">${item.tagTxt}</span>` : ''}
+          </div>
+          <div class="ci-sub">${item.sub}</div>
+          ${item.note ? `<div class="ci-note" onclick="event.stopPropagation()"><input placeholder="${item.notePlh||'Notiz...'}" value="${(data[item.id+'_note'])||''}" oninput="${storeKey}['${item.id}_note']=this.value"></div>` : ''}
+        </div>
+      </div>`;
+    });
+    html += `</div></div>`;
+  });
+
+  html += `<div class="actions">
+    <button class="btn-reset" onclick="resetTab('${storeKey}','${tabId}')">↺ Zurücksetzen</button>
+    <button class="btn-print" onclick="window.print()">🖨 Als PDF drucken</button>
+  </div>`;
+
+  document.getElementById(tabId).innerHTML = html;
+}
+
+function toggle(storeKey, id, e){
+  if(e.target.tagName==='INPUT') return;
+  const store = storeKey==='wData' ? wData : iData;
+  store[id] = store[id]==='done' ? '' : 'done';
+  const tabId = storeKey==='wData' ? 'tab-wechsel' : 'tab-intern';
+  const checks = storeKey==='wData' ? WECHSEL : INTERN;
+  renderTab(tabId, checks, store, storeKey);
+}
+
+function resetTab(storeKey, tabId){
+  if(!confirm('Alle Häkchen in diesem Tab zurücksetzen?')) return;
+  if(storeKey==='wData') { Object.keys(wData).forEach(k=>delete wData[k]); }
+  else { Object.keys(iData).forEach(k=>delete iData[k]); }
+  const checks = storeKey==='wData' ? WECHSEL : INTERN;
+  renderTab(tabId, checks, storeKey==='wData'?wData:iData, storeKey);
+}
+
+function switchTab(name, el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+}
+
+renderTab('tab-wechsel', WECHSEL, wData, 'wData');
+renderTab('tab-intern', INTERN, iData, 'iData');
+</script>
+</body>
+</html>
